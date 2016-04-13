@@ -1,10 +1,15 @@
 #!/usr/bin/perl
 use strict;
 use warnings FATAL => 'all';
-use constant IGNITE=> 0;
+use constant IGNITE => 0;
 
 while (<>) {
 	chomp;
+
+	if ($_ eq "exit") {
+		last;
+	}
+	
 	my @words_in_line = /[a-z0-9,!.?](?:[a-z0-9,!.?']*[a-z0-9,!.?])?/ig;
 	my $result = "";
 
