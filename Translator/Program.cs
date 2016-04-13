@@ -66,30 +66,27 @@ namespace Translator
                             word = word.ToLower();
 
                             // save up to but not including the first vowel in the prefix
-                            for (int j = 0; j < word.Length; j++)
+                            int j = 0;
+                            while (j < word.Length && !vowelHash.Contains(word[j]))
                             {
-                                // save the first vowel and rest of the word in the stem
-                                if (vowelHash.Contains(word[j]))
-                                {
-                                    if (firstUpper)
-                                    {
-                                        stem = Char.ToUpper(word[j]) + word.Substring(j + 1);
-                                    }
-                                    else
-                                    {
-                                        stem = word.Substring(j);
-                                    }
-
-                                    // used to determine if is a word that begins with a vowel
-                                    if (!Ignite && charCount != 0 && String.Equals(word, stem.ToLower(), StringComparison.Ordinal))
-                                    {
-                                        ay = "yay";
-                                    }
-
-                                    break;
-                                }
-
                                 prefix += word[j];
+                                ++j;
+                            }
+
+                            // save first vowel till end in the stem
+                            if (firstUpper)
+                            {
+                                stem = Char.ToUpper(word[j]) + word.Substring(j + 1);
+                            }
+                            else
+                            {
+                                stem = word.Substring(j);
+                            }
+
+                            // used to determine if is a word that begins with a vowel
+                            if (!Ignite && charCount != 0 && String.Equals(word, stem.ToLower(), StringComparison.Ordinal))
+                            {
+                                ay = "yay";
                             }
                         }
 
