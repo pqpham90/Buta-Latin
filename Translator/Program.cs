@@ -9,16 +9,16 @@ namespace Translator
 {
     class Program
     {
-        private static char[] Vowel = { 'a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y' };
-        private static char[] Punctuation = { ',', '!', '?' };
+        private static char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y' };
+        private static char[] Punctuations = { ',', '!', '?' , '.' };
 
         // False = use yay for words that begin with vowels, True = only for words without consanants
         private static bool Ignite = false;
 
         static void Main(string[] args)
         {
-            Dictionary<char, int> vowelDictionary = createDictionary(Vowel);
-            Dictionary<char, int> punctuationDictionary = createDictionary(Punctuation);
+            var vowelHash = new HashSet<char>(Vowels);
+            var punctionationHash = new HashSet<char>(Punctuations);
 
             string[] lineArray = processInput(Console.ReadLine());
 
@@ -41,14 +41,14 @@ namespace Translator
 
                         // preserve punctions that exist in the hash
                         char lastChar = word[word.Length - 1];
-                        bool hasPunctuation = isPunctuation(lastChar, punctuationDictionary);
+                        bool hasPunctuation = punctionationHash.Contains(lastChar);
                         if (hasPunctuation)
                         {
                             word = word.Substring(0, word.Length - 1);
                             punctuation = lastChar.ToString();
                         }
 
-                        int charCount = Regex.Matches(word, @"[a-zA-Z]").Count;
+                        int charCount = Regex.Matches(word, @"[a-z]", RegexOptions.IgnoreCase).Count;
                         int consanantCount = Regex.Matches(word, @"[b-df-hj-np-tv-xz]", RegexOptions.IgnoreCase).Count;
                         if (Ignite && charCount == 0)
                         {
@@ -69,7 +69,7 @@ namespace Translator
                             for (int j = 0; j < word.Length; j++)
                             {
                                 // save the first vowel and rest of the word in the stem
-                                if (isVowel(word[j], vowelDictionary))
+                                if (vowelHash.Contains(word[j]))
                                 {
                                     if (firstUpper)
                                     {
@@ -108,28 +108,6 @@ namespace Translator
                 lineArray = processInput(Console.ReadLine());
             }
 
-        }
-
-        // fill the dictionary from defined arrays.
-        static Dictionary<char, int> createDictionary(char[] foo)
-        {
-            Dictionary<char, int> fooDictionary = new Dictionary<char, int>();
-            for (int i = 0; i < foo.Length; i++)
-            {
-               fooDictionary.Add(foo[i], 1);
-            }
-
-            return fooDictionary;
-        }
-
-        static bool isPunctuation(char c, Dictionary<char, int> punctuationDictionary)
-        {
-            return punctuationDictionary.ContainsKey(c);
-        }
-
-        static bool isVowel(char c, Dictionary<char, int> vowelDictionary)
-        {
-            return vowelDictionary.ContainsKey(c);
         }
 
         static string[] processInput(String line)
